@@ -1,19 +1,19 @@
-﻿using Dotnet_Ecom.Data;
-using Dotnet_Ecom.Models;
+﻿using Ecom.DataAccess.Repository.IRepository;
+using Ecom.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dotnet_Ecom.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly ICategoryRepository _categoryRepository;
+        public CategoryController(ICategoryRepository db)
         {
-            _db = db;
+            _categoryRepository = db;
         }
         public IActionResult Index()
         {
-            List<Category> categories = _db.Categories.ToList();
+            List<Category> categories = _categoryRepository.GetAll().ToList();
             return View(categories);
         }
 
@@ -28,8 +28,8 @@ namespace Dotnet_Ecom.Controllers
                 ModelState.AddModelError("Name", "The DisplayOrder cannot exactly match the Name.");
             }
             if (ModelState.IsValid) {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _categoryRepository.Add(obj);
+                _categoryRepository.Save();
                 TempData["success"] = "Category Created Successfully.";
                 return RedirectToAction("Index", "Category");
             }
@@ -42,7 +42,7 @@ namespace Dotnet_Ecom.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
+            Category? categoryFromDb = _categoryRepository.Get(c => c.Id == id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -55,8 +55,8 @@ namespace Dotnet_Ecom.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _categoryRepository.Update(obj);
+                _categoryRepository.Save();
                 TempData["success"] = "Category Updated Successfully.";
                 return RedirectToAction("Index", "Category");
             }
@@ -69,7 +69,7 @@ namespace Dotnet_Ecom.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
+            Category? categoryFromDb = _categoryRepository.Get(c => c.Id == id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -80,13 +80,13 @@ namespace Dotnet_Ecom.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Category? obj = _db.Categories.FirstOrDefault(c => c.Id == id);
+            Category? obj = _categoryRepository.Get(c => c.Id == id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
+            _categoryRepository.Remove(obj);
+            _categoryRepository.Save();
             TempData["success"] = "Category Deleted Successfully.";
             return RedirectToAction("Index", "Category");
         }
