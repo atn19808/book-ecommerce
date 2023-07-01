@@ -1,9 +1,10 @@
-using Dotnet_Ecom.Models;
+using Ecom.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace Dotnet_Ecom.Controllers
+namespace Dotnet_Ecom.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
