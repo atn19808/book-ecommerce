@@ -1,11 +1,11 @@
-
+var dataTable;
 
 $(document).ready(function () {
     loadDataTable();
 });
 
 function loadDataTable() {
-    dataTable = $('$tblData').DataTable({
+    dataTable = $('$#tblData').DataTable({
         "ajax": { url: '/admin/product/getall' },
         "columns": [
             { data: 'title', "width": "25%" },

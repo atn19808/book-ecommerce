@@ -24,21 +24,23 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+            ProductVM ProductVM = new()
             {
-                Text = u.Name,
-                Value = u.Id.ToString()
-            });
-            ProductVM productVM = new()
-            {
-                CategoryList = CategoryList,
-                Product = new Product()
+                CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem{
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                })
             };
-            if (id is not (null or 0))
+
+            if (id == null || id ==0)
             {
-                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(ProductVM);
             }
-            return View(productVM);
+            else
+            {
+                ProductVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(ProductVM);
+            }
         }
 
         [HttpPost]
@@ -46,16 +48,6 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (productVM.Product.Id == 0)
-                {
-                    _unitOfWork.Product.Add(productVM.Product);
-                }
-                else
-                {
-                    _unitOfWork.Product.Update(productVM.Product);
-                }
-
-                _unitOfWork.Save();
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (file != null)
                 {
@@ -85,6 +77,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
                 {
                     _unitOfWork.Product.Update(productVM.Product);
                 }
+                _unitOfWork.Save();
                 TempData["success"] = "Product Created Successfully.";
                 return RedirectToAction("Index", "Product");
             } else
