@@ -1,11 +1,6 @@
 ﻿using Ecom.DataAccess.Data;
 using Ecom.DataAccess.Repository.IRepository;
 using Ecom.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ecom.DataAccess.Repository
 {
@@ -17,9 +12,25 @@ namespace Ecom.DataAccess.Repository
             _db = db;
         }
 
-        void IProductRepository.Update(Product product)
+        void IProductRepository.Update(Product obj)
         {
-            _db.Products.Update(product);
+            var objFromDb = _db.Products.FirstOrDefault(x => x.Id == obj.Id);
+            if (objFromDb != null)
+            {
+                objFromDb.Title = obj.Title;
+                objFromDb.Description = obj.Description;
+                objFromDb.CategoryId = obj.CategoryId;
+                objFromDb.Author = obj.Author;
+                objFromDb.Price100 = obj.Price100;
+                objFromDb.Price = obj.Price;
+                objFromDb.Price50 = obj.Price50;
+                objFromDb.ISBN = obj.ISBN;
+                objFromDb.ListPrice = obj.ListPrice;
+                if (objFromDb.ImageUrl != null)
+                {
+                    objFromDb.ImageUrl = obj.ImageUrl;
+                }
+            }
         }
     }
 }
