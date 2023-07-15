@@ -25,6 +25,28 @@ namespace Ecom.DataAccess.Data
                 new Category { Id = 2, Name = "Scifi", DisplayOrder = 2 },
                 new Category { Id = 3, Name = "History", DisplayOrder = 3 }
                 );
+
+            modelBuilder.Entity<Company>().HasData(
+                new Company { 
+                    Id = 1, 
+                    Name = "Tech Solution", 
+                    StreetAddress = "123 Tech St", 
+                    City = "Tech City", 
+                    PostalCode = "12312", 
+                    State = "ST", 
+                    PhoneNumber = "123123123" 
+                },
+                new Company
+                {
+                    Id = 2,
+                    Name = "Sol Solution",
+                    StreetAddress = "213 Tech St",
+                    City = "Sol City",
+                    PostalCode = "41251",
+                    State = "TX",
+                    PhoneNumber = "1254563456"
+                }
+                );
             modelBuilder.Entity<Product>().HasData(
                 new Product
                 {
