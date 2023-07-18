@@ -123,6 +123,8 @@ namespace Dotnet_Ecom.Areas.Customer.Controllers
 
 			if (applicationUser.CompanyId.GetValueOrDefault() == 0)
 			{
+				// it is a regular customer account and we need to capture payment
+				// stripe logic
 				var domain = "https://localhost:7194/";
 				var options = new SessionCreateOptions
 				{
@@ -163,7 +165,8 @@ namespace Dotnet_Ecom.Areas.Customer.Controllers
 
 		public IActionResult OrderConfirmation(int id)
 		{
-			OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id ==  id, includeProperties: "ApplicationUser");
+			OrderHeader orderHeader = _unitOfWork.OrderHeader
+				.Get(u => u.Id ==  id, includeProperties: "ApplicationUser");
 			if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
 			{
 				// this is an order by customer
