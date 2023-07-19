@@ -122,13 +122,6 @@ namespace Dotnet_Ecom.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!_roleManager.RoleExistsAsync(SD.Role_Company).GetAwaiter().GetResult())
-            {
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
-            }
             Input = new()
             {
                 RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
@@ -204,7 +197,7 @@ namespace Dotnet_Ecom.Areas.Identity.Pages.Account
                             TempData["success"] = "New User Created Successfully";
                         } else
                         {
-                            await _signInManager.SignInAsync(user, isPersistent: false)
+                            await _signInManager.SignInAsync(user, isPersistent: false);
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
