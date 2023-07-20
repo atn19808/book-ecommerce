@@ -13,7 +13,7 @@ namespace Ecom.DataAccess.Repository
             _db = db;
         }
 
-        void ICategoryRepository.Update(Category category)
+        public void Update(Category category)
         {
             _db.Categories.Update(category);
         }

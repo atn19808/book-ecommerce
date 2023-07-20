@@ -12,7 +12,7 @@ namespace Ecom.DataAccess.Repository
             _db = db;
         }
 
-        void IProductRepository.Update(Product obj)
+        public void Update(Product obj)
         {
             var objFromDb = _db.Products.FirstOrDefault(x => x.Id == obj.Id);
             if (objFromDb != null)
@@ -26,10 +26,7 @@ namespace Ecom.DataAccess.Repository
                 objFromDb.Price50 = obj.Price50;
                 objFromDb.ISBN = obj.ISBN;
                 objFromDb.ListPrice = obj.ListPrice;
-                if (objFromDb.ImageUrl != null)
-                {
-                    objFromDb.ImageUrl = obj.ImageUrl;
-                }
+                objFromDb.ProductImages = obj.ProductImages;
             }
         }
     }
