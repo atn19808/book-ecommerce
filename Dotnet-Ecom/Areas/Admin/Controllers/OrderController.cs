@@ -208,7 +208,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
             switch (status)
             {
                 case "pending":
-                    objOrderHeaders = objOrderHeaders.Where(u => u.PaymentStatus == SD.PaymentStatusDelayedPayment);
+                    objOrderHeaders = objOrderHeaders.Where(u => u.PaymentStatus == SD.StatusPending);
                     break;
                 case "inprocess":
                     objOrderHeaders = objOrderHeaders.Where(u => u.PaymentStatus == SD.StatusInProcess);
