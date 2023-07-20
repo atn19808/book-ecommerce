@@ -50,7 +50,7 @@ namespace Ecom.DataAccess.Repository
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
-                query.Where(filter);
+                query = query.Where(filter);
             }
             if (!string.IsNullOrEmpty(includeProperties)) {
                 foreach(var includeProp in includeProperties.Split(new char[] { ',' }, 
