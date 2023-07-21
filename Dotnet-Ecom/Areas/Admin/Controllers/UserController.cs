@@ -56,7 +56,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
         {
             string oldRole = _userManager.GetRolesAsync(_unitOfWork.ApplicationUser.Get(u => u.Id == roleManagementVM.ApplicationUser.Id))
                 .GetAwaiter().GetResult().FirstOrDefault();
-            ApplicationUser applicationUser= _unitOfWork.ApplicationUser.Get(u => u.Id == roleManagementVM.ApplicationUser.Id, includeProperties: "Company");
+            ApplicationUser applicationUser= _unitOfWork.ApplicationUser.Get(u => u.Id == roleManagementVM.ApplicationUser.Id);
 
             if (!(roleManagementVM.ApplicationUser.Role == oldRole))
             {
@@ -97,13 +97,13 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
 
                 if(user.Company == null)
                 {
-                    user.Company = new() { Name = "" };
+                    user.Company = new Company() { Name = "" };
                 }
             }
             
             return Json(new {data = objUserList });
         }
-        [HttpDelete]
+        [HttpPost]
         public IActionResult LockUnlock([FromBody]string id)
         {
             var objFromDb = _unitOfWork.ApplicationUser.Get(u => u.Id == id);
@@ -123,7 +123,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
 
             _unitOfWork.ApplicationUser.Update(objFromDb);
             _unitOfWork.Save(); 
-            return Json(new { success = false, message = "Operation Successfully" });
+            return Json(new { success = true, message = "Operation Successfully" });
         }
 
         #endregion

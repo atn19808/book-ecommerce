@@ -69,7 +69,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
                     foreach (var file in files)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productPath = @"iamges\products\product-" + productVM.Product.Id;
+                        string productPath = @"images\products\product-" + productVM.Product.Id;
                         string finalPath = Path.Combine(wwwRootPath, @"images\product");
 
                         if (!Directory.Exists(finalPath))
@@ -135,11 +135,12 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
         }
 
         #region API CALLS
+
         [HttpGet]
         public IActionResult GetAll()
         {
             List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
-            return Json(new {data = objProductList });
+            return Json(new { data = objProductList });
         }
 
         [HttpDelete]
