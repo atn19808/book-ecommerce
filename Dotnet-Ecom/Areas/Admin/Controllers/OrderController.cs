@@ -54,7 +54,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
             orderHeaderFromDb.State = OrderVM.OrderHeader.State;
             orderHeaderFromDb.PostalCode = OrderVM.OrderHeader.PostalCode;
 
-            if (!string.IsNullOrEmpty(OrderVM.OrderHeader.TrackingNumber))
+            if (!string.IsNullOrEmpty(OrderVM.OrderHeader.Carrier))
             {
                 orderHeaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
             }
@@ -131,7 +131,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
             OrderVM.OrderHeader = _unitOfWork.OrderHeader
                 .Get(u => u.Id == OrderVM.OrderHeader.Id, includeProperties:"ApplicationUser");
             OrderVM.OrderDetail = _unitOfWork.OrderDetail
-                .GetAll(u => u.Id == OrderVM.OrderHeader.Id, includeProperties: "Product");
+                .GetAll(u => u.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
             // stripe logic
             var domain = Request.Scheme + "://" + Request.Host.Value + "/";
             var options = new SessionCreateOptions
@@ -202,13 +202,13 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-                objOrderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.ApplicationUserId == userId,includeProperties: "ApplicationUser").ToList();
+                objOrderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.ApplicationUserId == userId,includeProperties: "ApplicationUser");
             }
 
             switch (status)
             {
                 case "pending":
-                    objOrderHeaders = objOrderHeaders.Where(u => u.PaymentStatus == SD.StatusPending);
+                    objOrderHeaders = objOrderHeaders.Where(u => u.PaymentStatus == SD.PaymentStatusDelayedPayment);
                     break;
                 case "inprocess":
                     objOrderHeaders = objOrderHeaders.Where(u => u.PaymentStatus == SD.StatusInProcess);
