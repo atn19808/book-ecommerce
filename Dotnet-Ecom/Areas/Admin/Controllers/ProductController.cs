@@ -27,7 +27,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            ProductVM ProductVM = new()
+            ProductVM productVM = new()
             {
                 CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem{
                     Text = u.Name,
@@ -38,17 +38,17 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
 
             if (id == null || id ==0)
             {
-                return View(ProductVM);
+                return View(productVM);
             }
             else
             {
-                ProductVM.Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"ProductImages");
-                return View(ProductVM);
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"ProductImages");
+                return View(productVM);
             }
         }
 
         [HttpPost]
-        public IActionResult Upsert(ProductVM productVM, List<IFormFile>? files)
+        public IActionResult Upsert(ProductVM productVM, List<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -66,11 +66,11 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (files != null)
                 {
-                    foreach (var file in files)
+                    foreach (IFormFile file in files)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         string productPath = @"images\products\product-" + productVM.Product.Id;
-                        string finalPath = Path.Combine(wwwRootPath, @"images\product");
+                        string finalPath = Path.Combine(wwwRootPath, productPath);
 
                         if (!Directory.Exists(finalPath))
                         {
@@ -99,7 +99,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
                 }
 
                 TempData["success"] = "Product Created/Updated Successfully.";
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction("Index");
             } else
             {
                 productVM.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
@@ -151,7 +151,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = "Error While Deleting" });
             }
-            string productPath = @"iamges\products\product-" + id;
+            string productPath = @"images\products\product-" + id;
             string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
 
             if (!Directory.Exists(finalPath))
@@ -161,7 +161,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
                 {
                    System.IO.File.Delete(filePath);
                 }
-                Directory.CreateDirectory(finalPath);
+                Directory.Delete(finalPath);
             }
             _unitOfWork.Product.Remove(productToBeDeleted);
             _unitOfWork.Save();
