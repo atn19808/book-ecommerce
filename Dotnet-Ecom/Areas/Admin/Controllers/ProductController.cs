@@ -143,6 +143,7 @@ namespace Dotnet_Ecom.Areas.Admin.Controllers
             return Json(new { data = objProductList });
         }
 
+
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
